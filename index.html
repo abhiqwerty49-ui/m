@@ -41,7 +41,7 @@
     .playbtn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:999px;color:var(--accent);cursor:pointer;font-weight:700}
     .follow{opacity:0.95;margin-left:8px;text-decoration:none;color:var(--accent);font-weight:700}
 
-    footer{margin-top:14px;font-size:0.86rem;opacity:0.95}
+    {margin-top:14px;font-size:0.86rem;opacity:0.95}
 
     @media (max-width:520px){.unit{min-width:84px;padding:14px}.value{font-size:2.8rem}}
   </style>
@@ -80,12 +80,11 @@
       <a class="follow" id="followLink" href="https://x.com/NYYankeesEra" target="_blank" rel="noopener">Follow @NYYankeesEra</a>
     </div>
 
-    <footer>Audio included: provided music. Click Play to start audio (autoplay blocked on most browsers).</footer>
+    
   </div>
 
   <audio id="bgAudio" loop preload="auto">
-    <source src="/mnt/data/yesnetwork.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
+    <source src="https://raw.githubusercontent.com/abhiqwerty49-ui/m/main/yesnetwork.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -153,8 +152,29 @@
         }
       });
 
-      // Audio play/pause
+      // Autoplay attempt
       const audio = document.getElementById('bgAudio');
+      const playBtn = document.getElementById('playBtn');
+      let playing = false;
+
+      // Try autoplay on load
+      audio.volume = 1.0;
+      audio.play().then(()=>{
+        playBtn.textContent = 'Pause music';
+        playing = true;
+      }).catch(()=>{
+        // Autoplay blocked — will start on first click anywhere
+        document.body.addEventListener('click', function autoStart(){
+          audio.play().then(()=>{
+            playBtn.textContent = 'Pause music';
+            playing = true;
+          });
+          document.body.removeEventListener('click', autoStart);
+        });
+      });
+
+      // Button manual toggle
+      const const audio = document.getElementById('bgAudio');
       const playBtn = document.getElementById('playBtn');
       let playing = false;
       playBtn.addEventListener('click', function(){
