@@ -1,133 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Days Since Man Utd Won the League</title>
-  <meta name="description" content="Live counter showing days, hours, minutes, and seconds since Manchester United last won the Premier League (April 22, 2013)." />
-  <meta property="og:title" content="Days Since Man Utd Won the League" />
-  <meta property="og:description" content="Live counter since April 22, 2013." />
-  <meta property="og:type" content="website" />
-  <meta name="theme-color" content="#DA291C" />
-  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blue Jays Drought Tracker</title>
   <style>
-    :root{
-      --bg:#1a0000;
-      --card:#2d0000;
-      --text:#fff;
-      --muted:#f87171;
-      --accent:#DA291C;
-      --accent2:#FBE122;
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Arial Black', Arial, sans-serif;
+      color: white;
+      text-align: center;
+      background: #0C2340;
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;}
-    body{
-      margin:0;
-      background:radial-gradient(circle at top left,rgba(218,41,28,0.2),transparent 50%),radial-gradient(circle at bottom right,rgba(251,225,34,0.15),transparent 50%),var(--bg);
-      color:var(--text);
-      font-family:'Poppins',sans-serif;
-      text-align:center;
-      overflow-x:hidden;
+
+    .background {
+      background: 
+        linear-gradient(rgba(12, 35, 64, 0.88), rgba(12, 35, 64, 0.88)),
+        url('https://i.ibb.co/KLcZ3vP/yankees-laughing-bluejays-crying.jpg') center/cover no-repeat fixed;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
-    .wrap{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
-    .logo{width:140px;height:140px;margin-bottom:20px;animation:float 4s ease-in-out infinite;}
-    @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
-    h1{font-size:clamp(22px,3vw,36px);margin-bottom:10px;color:var(--accent2);text-shadow:0 0 10px rgba(251,225,34,0.5);font-weight:600;}
-    .sub{color:var(--muted);margin-bottom:30px;font-size:16px;}
 
-    /* Timer layout */
-    .timer{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;margin-bottom:25px;background:rgba(218,41,28,0.15);border:2px solid var(--accent2);border-radius:24px;padding:25px 40px;box-shadow:0 0 25px rgba(251,225,34,0.3);transform:scale(1.05);}
-    .tile{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 20px;min-width:100px;perspective:900px;}
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 4px 4px 15px rgba(0,0,0,0.9);
+    }
 
-    /* Big numbers */
-    .num{font-size:clamp(42px,8vw,110px);font-weight:900;color:var(--accent2);text-shadow:0 0 25px rgba(251,225,34,0.4),0 0 10px rgba(251,225,34,0.6);line-height:1.1;letter-spacing:1px;display:inline-block;}
-    .label{margin-top:8px;font-size:15px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:600;}
+    h2 {
+      font-size: 2.2rem;
+      margin-bottom: 3rem;
+      opacity: 0.95;
+    }
 
-    /* Delightful change animations */
-    .num.pulse{animation:pulse 450ms ease-out;}
-    @keyframes pulse{0%{transform:scale(1);text-shadow:0 0 6px rgba(251,225,34,0.7);}40%{transform:scale(1.06);}100%{transform:scale(1);}}
+    .timer {
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 
-    .num.flip{animation:flip-in 500ms cubic-bezier(.2,.7,.2,1);transform-origin:50% 60%;}
-    @keyframes flip-in{0%{transform:rotateX(-80deg) translateZ(0);opacity:.75}60%{transform:rotateX(15deg)}100%{transform:rotateX(0)}}
+    .time-block {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      padding: 2rem 2.5rem;
+      border-radius: 24px;
+      min-width: 200px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
 
-    /* X button */
-    .twitter-link{margin-top:20px;display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:30px;border:2px solid var(--accent2);color:var(--accent2);text-decoration:none;font-weight:700;transition:0.3s;background:rgba(218,41,28,0.15);font-size:15px;}
-    .twitter-link:hover{background:rgba(251,225,34,0.25);transform:scale(1.08);}
-    .twitter-icon{width:22px;height:22px;fill:var(--accent2);}
+    .number {
+      font-size: 6rem;
+      font-weight: bold;
+      line-height: 1;
+      text-shadow: 4px 4px 12px rgba(0,0,0,0.9);
+    }
 
-    footer{margin-top:35px;font-size:13px;color:var(--muted);letter-spacing:0.3px;}
+    .label {
+      font-size: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      opacity: 0.9;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 30px;
+      font-size: 1.1rem;
+      opacity: 0.8;
+      text-shadow: 2px 2px 8px black;
+    }
+
+    @media (max-width: 900px) {
+      h1 { font-size: 2.8rem; }
+      }
+      .timer { gap: 1.5rem; }
+      .time-block { padding: 1.5rem; min-width: 140px; }
+      .number { font-size: 4rem; }
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <img src="https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg" alt="Man Utd logo" class="logo">
-    <h1>Days Since Manchester United Won the League</h1>
-    <p class="sub">Counting since <strong>April 22, 2013</strong> (vs Aston Villa)</p>
+  <div class="background">
+    <h1>Blue Jays World Series Drought</h1>
+    <h2>Time since last championship • October 24, 1993</h2>
 
-    <section class="timer" aria-label="time since last title">
-      <div class="tile"><div id="days" class="num">0</div><div class="label">Days</div></div>
-      <div class="tile"><div id="hours" class="num">00</div><div class="label">Hours</div></div>
-      <div class="tile"><div id="minutes" class="num">00</div><div class="label">Minutes</div></div>
-      <div class="tile"><div id="seconds" class="num">00</div><div class="label">Seconds</div></div>
-    </section>
+    <div class="timer">
+      <div class="time-block">
+        <span class="number" id="years">0</span>
+        <span class="label">Years</span>
+      </div>
+      <div class="time-block">
+        <span class="number" id="weeks">0</span>
+        <span class="label">Weeks</span>
+      </div>
+      <div class="time-block">
+        <span class="number" id="days">0</span>
+        <span class="label">Days</span>
+      </div>
+      <div class="time-block">
+        <span class="number" id="hours">00</span>
+        <span class="label">Hours</span>
+      </div>
+      <div class="time-block">
+        <span class="number" id="minutes">00</span>
+        <span class="label">Minutes</span>
+      </div>
+      <div class="time-block">
+        <span class="number" id="seconds">00</span>
+        <span class="label">Seconds</span>
+      </div>
+    </div>
 
-    <a href="https://x.com/DaysManutd" target="_blank" class="twitter-link" aria-label="Visit DaysManutd on X">
-      <svg class="twitter-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.35l-5.214-6.817L5.1 21.75H1.79l7.73-8.835L1.254 2.25H7.86l4.713 6.231 5.67-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z"/></svg>
-      Follow @DaysManutd
-    </a>
-
-    <footer>
-      <p>Glory Glory Man United ❤️💛 | Updated live every second</p>
-    </footer>
+    <footer>Made with 100% pure Yankee schadenfreude • Never forget 1993</footer>
   </div>
 
   <script>
-    const REFERENCE_ISO = '2013-04-22T20:55:00Z';
-    const start = new Date(REFERENCE_ISO).getTime();
+    // Toronto Blue Jays last World Series win: October 24, 1993
+    const championshipDate = new Date('1993-10-24T20:00:00');
 
-    const el = {
-      d: document.getElementById('days'),
-      h: document.getElementById('hours'),
-      m: document.getElementById('minutes'),
-      s: document.getElementById('seconds')
-    };
+    function updateTimer() {
+      const now = new Date();
+      const diffMs = now - championshipDate;
 
-    const prev = { d: null, h: null, m: null, s: null };
+      const totalSeconds = Math.floor(diffMs / 1000);
+      const totalMinutes = Math.floor(totalSeconds / 60);
+      const totalHours   = Math.floor(totalMinutes / 60);
+      const totalDays    = Math.floor(totalHours / 24);
 
-    function pad(n){return String(n).padStart(2,'0');}
-    function withCommas(n){return n.toLocaleString(undefined);}    
+      const years = now.getFullYear() - 1993;
+      const weeks = totalDays / 7; // includes fractional weeks, we floor later for display
 
-    function animateChange(node, mode='pulse'){
-      node.classList.remove('pulse','flip');
-      void node.offsetWidth;
-      node.classList.add(mode);
-      node.addEventListener('animationend', () => node.classList.remove(mode), { once:true });
+      document.getElementById('years').textContent = years;
+      document.getElementById('weeks').textContent = Math.floor(weeks);
+      document.getElementById('days').textContent = totalDays;
+      document.getElementById('hours').textContent   = String(totalHours % 24).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(totalMinutes % 60).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(totalSeconds % 60).padStart(2, '0');
     }
 
-    function setIfChanged(node, next, key){
-      if(node.textContent !== next){
-        node.textContent = next;
-        animateChange(node, key==='s' ? 'flip' : 'pulse');
-      }
-    }
-
-    function tick(){
-      const now = Date.now();
-      let diffSec = Math.max(0, Math.floor((now - start)/1000));
-
-      const days = Math.floor(diffSec / 86400); diffSec -= days*86400;
-      const hours = Math.floor(diffSec / 3600); diffSec -= hours*3600;
-      const minutes = Math.floor(diffSec / 60); diffSec -= minutes*60;
-      const seconds = diffSec;
-
-      setIfChanged(el.d, withCommas(days), 'd');
-      setIfChanged(el.h, pad(hours), 'h');
-      setIfChanged(el.m, pad(minutes), 'm');
-      setIfChanged(el.s, pad(seconds), 's');
-    }
-
-    tick();
-    setInterval(tick,1000);
+    updateTimer();
+    setInterval(updateTimer, 1000);
   </script>
 </body>
 </html>
