@@ -27,7 +27,7 @@
       overflow:hidden;
       background:linear-gradient(rgba(12,35,64,.55), rgba(12,35,64,.75));
     }
-    /* video fills hero and sits behind content */
+
     .hero video.bg {
       position:absolute;
       inset:0;
@@ -37,46 +37,76 @@
       z-index:0;
       filter:brightness(.45) saturate(.9);
     }
-    /* overlay to keep text legible */
+
     .hero::after{
       content:"";position:absolute;inset:0;pointer-events:none;opacity:.10;
       background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.02)0,rgba(255,255,255,.02)2px,transparent 2px,transparent 18px);
       z-index:1;
     }
 
-    /* content sits above video */
     .hero > .content { position:relative; z-index:2; width:100%; max-width:1100px; }
 
-    h1{color:var(--white);font-weight:900;text-shadow:0 5px 25px rgba(0,0,0,.6);font-size:clamp(22px,3.6vw,42px);}
+    h1{
+      color:var(--white);
+      font-weight:900;
+      text-shadow:0 5px 25px rgba(0,0,0,.6);
+      font-size:clamp(22px,3.6vw,42px);
+    }
+
     .sub{opacity:.95;font-size:clamp(15px,2.5vw,17px);color:var(--gray);}
     .timer{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;margin-top:18px;}
-    .tile{background:rgba(12,35,64,.55);border:1.5px solid var(--deepgray);border-radius:18px;padding:14px 18px;min-width:110px;backdrop-filter:saturate(140%) blur(6px);box-shadow:0 8px 24px rgba(0,0,0,.4);}
-    .num{font-variant-numeric:tabular-nums;font-weight:900;color:var(--white);text-shadow:0 0 14px rgba(255,255,255,.35),0 0 6px rgba(255,255,255,.35);font-size:clamp(46px,8vw,110px);}
+    .tile{
+      background:rgba(12,35,64,.55);border:1.5px solid var(--deepgray);
+      border-radius:18px;padding:14px 18px;min-width:110px;
+      backdrop-filter:saturate(140%) blur(6px);
+      box-shadow:0 8px 24px rgba(0,0,0,.4);
+    }
+
+    .num{
+      font-variant-numeric:tabular-nums;
+      font-weight:900;
+      color:var(--white);
+      text-shadow:0 0 14px rgba(255,255,255,.35),0 0 6px rgba(255,255,255,.35);
+      font-size:clamp(46px,8vw,110px);
+    }
     .label{opacity:.9;margin-top:6px;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--deepgray);}
+
     .num.pulse{animation:pulse 450ms ease-out}
     @keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
     .num.flip{animation:flip-in 520ms cubic-bezier(.2,.7,.2,1);transform-origin:50% 60%}
     @keyframes flip-in{0%{transform:rotateX(-80deg);opacity:.75}60%{transform:rotateX(15deg)}100%{transform:rotateX(0)}}
 
-    /* Buttons & controls */
     .controls {
-      margin-top:20px; display:flex; gap:12px; justify-content:center; align-items:center; z-index:2;
+      margin-top:20px;
+      display:flex; gap:12px; justify-content:center; align-items:center;
     }
-    .btn {
-      padding:12px 18px;border-radius:999px;border:none;background:rgba(255,255,255,.08);color:var(--white);font-weight:700;cursor:pointer;
+
+    .btn{
+      padding:12px 18px;border-radius:999px;border:none;
+      background:rgba(255,255,255,.08);color:var(--white);font-weight:700;cursor:pointer;
       backdrop-filter: blur(3px); box-shadow:0 6px 18px rgba(0,0,0,.35);
     }
     .btn:hover{transform:translateY(-3px); transition:transform .18s ease;}
 
-    footer{margin-top:40px;font-size:13px;color:var(--deepgray);z-index:2;}
+    footer{margin-top:40px;font-size:13px;color:var(--deepgray);}
     footer a{color:var(--gray)}
+
+    /* falling crying faces */
+    @keyframes fall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity:1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity:0; }
+    }
   </style>
 </head>
+
 <body>
   <main class="hero">
-    <!-- Put the video file (vladdy.mp4) in the same folder as this HTML.
-         Use muted autoplay loop playsinline so browsers will allow autoplay. -->
+
+    <!-- The background video -->
     <video class="bg" id="bgVideo" src="vladdy.mp4" autoplay muted loop playsinline preload="metadata"></video>
+
+    <!-- Always playing background music -->
+    <audio id="bgMusic" src="yesnetwork.mp3" autoplay loop muted playsinline></audio>
 
     <div class="content">
       <h1>Days Since New York <strong>BLUE JAYS</strong> Won the World Series</h1>
@@ -90,91 +120,97 @@
       </section>
 
       <div class="controls">
-        <button id="muteBtn" class="btn">🔊 Unmute</button>
+        <button id="muteBtn" class="btn">🔊 Unmute Video</button>
         <button id="videoToggle" class="btn">⏸ Pause Video</button>
-        <button id="partyBtn" class="btn">🎉 Party</button>
+        <button id="partyBtn" class="btn">😭 Crying Rain</button>
       </div>
 
       <footer>
-        <p>Background video: your file <code>vladdy.mp4</code>.</p>
+        <p>Background uses vladdy.mp4 + yesnetwork.mp3.</p>
       </footer>
     </div>
   </main>
 
   <script>
-    /* ===== TIMER (start: 1992-10-24) ===== */
-    const REFERENCE_ISO='1992-10-24T00:00:00Z';
-    const start=new Date(REFERENCE_ISO).getTime();
-    const el={d:document.getElementById('days'), h:document.getElementById('hours'), m:document.getElementById('minutes'), s:document.getElementById('seconds')};
-    function pad(n){return String(n).padStart(2,'0')}
+    /* ===== TIMER ===== */
+    const start = new Date("1992-10-24T00:00:00Z").getTime();
+    const el = {
+      d: document.getElementById("days"),
+      h: document.getElementById("hours"),
+      m: document.getElementById("minutes"),
+      s: document.getElementById("seconds")
+    };
+    function pad(n){return String(n).padStart(2,"0")}
     function commas(n){return n.toLocaleString()}
-    function anim(node,cls){node.classList.remove('pulse','flip');void node.offsetWidth;node.classList.add(cls);node.addEventListener('animationend',()=>node.classList.remove(cls),{once:true})}
-    function upd(node,val,key){ if(node.textContent!==val){ node.textContent=val; anim(node, key==='s'?'flip':'pulse'); } }
-    function tick(){ const now=Date.now(); let dsec=Math.max(0,((now-start)/1000)|0); const d=(dsec/86400)|0; dsec-=d*86400; const h=(dsec/3600)|0; dsec-=h*3600; const m=(dsec/60)|0; dsec-=m*60; const s=dsec; upd(el.d,commas(d),'d'); upd(el.h,pad(h),'h'); upd(el.m,pad(m),'m'); upd(el.s,pad(s),'s'); }
+    function anim(node,cls){node.classList.remove("pulse","flip");void node.offsetWidth;node.classList.add(cls);node.addEventListener("animationend",()=>node.classList.remove(cls),{once:true})}
+    function upd(node,val,key){if(node.textContent!==val){node.textContent=val;anim(node,key==="s"?"flip":"pulse")}}
+    function tick(){
+      const now=Date.now();
+      let dsec=((now-start)/1000)|0;
+      const d=(dsec/86400)|0;dsec-=d*86400;
+      const h=(dsec/3600)|0;dsec-=h*3600;
+      const m=(dsec/60)|0;dsec-=m*60;
+      const s=dsec;
+      upd(el.d,commas(d),"d"); upd(el.h,pad(h),"h"); upd(el.m,pad(m),"m"); upd(el.s,pad(s),"s");
+    }
     tick(); setInterval(tick,1000);
 
-    /* ===== VIDEO CONTROLS ===== */
-    const bgVideo = document.getElementById('bgVideo');
-    const muteBtn = document.getElementById('muteBtn');
-    const videoToggle = document.getElementById('videoToggle');
-    const partyBtn = document.getElementById('partyBtn');
+    /* ===== BACKGROUND MUSIC ALWAYS ON ===== */
+    const bgMusic = document.getElementById("bgMusic");
+    function enableMusic(){
+      bgMusic.muted=false;
+      bgMusic.volume=1;
+      bgMusic.play();
+      document.removeEventListener("click", enableMusic);
+    }
+    document.addEventListener("click", enableMusic);
 
-    // Toggle mute/unmute. Unmuting requires a user gesture; calling play() after unmute helps on some browsers.
-    muteBtn.addEventListener('click', async () => {
+    /* ===== VIDEO CONTROLS ===== */
+    const bgVideo = document.getElementById("bgVideo");
+    const muteBtn = document.getElementById("muteBtn");
+    const videoToggle = document.getElementById("videoToggle");
+
+    muteBtn.addEventListener("click", ()=>{
       if(bgVideo.muted){
-        bgVideo.muted = false;
-        muteBtn.textContent = '🔈 Mute';
-        try { await bgVideo.play(); } catch(e) { /* play may fail if policies block */ }
+        bgVideo.muted=false;
+        muteBtn.textContent="🔈 Mute Video";
       } else {
-        bgVideo.muted = true;
-        muteBtn.textContent = '🔊 Unmute';
+        bgVideo.muted=true;
+        muteBtn.textContent="🔊 Unmute Video";
       }
     });
 
-    // Pause / play video
-    videoToggle.addEventListener('click', () => {
+    videoToggle.addEventListener("click", ()=>{
       if(bgVideo.paused){
         bgVideo.play();
-        videoToggle.textContent = '⏸ Pause Video';
+        videoToggle.textContent="⏸ Pause Video";
       } else {
         bgVideo.pause();
-        videoToggle.textContent = '▶️ Play Video';
+        videoToggle.textContent="▶️ Play Video";
       }
     });
 
-    /* PARTY BUTTON: reuses the old party behavior but keeps audio to separate controls.
-       If you want the party button to play a track, re-add an <audio> element and wire it here. */
-    partyBtn.addEventListener('click', () => {
-      // short flower/emoji shower to demo effect
-      const emojis=['🌸','🌼','🌺','🌹','🌷','💐'];
-      for(let i=0;i<60;i++){
-        const span=document.createElement('span');
-        span.textContent=emojis[Math.floor(Math.random()*emojis.length)];
-        span.style.position='fixed';
-        span.style.left=Math.random()*100+'vw';
-        span.style.top='-10vh';
-        span.style.fontSize=Math.random()*20+15+'px';
-        span.style.zIndex=9999;
-        span.style.animation='fall '+(3+Math.random()*3)+'s linear forwards';
-        document.body.appendChild(span);
-        setTimeout(()=>span.remove(),7000);
+    /* ===== Crying Face Rain ===== */
+    const partyBtn = document.getElementById("partyBtn");
+
+    partyBtn.addEventListener("click", () => {
+      const imgURL = "A_digital_graphic_features_crying_faces_of_a_beard.png"; // replace with final path if needed
+
+      let count = 80;
+      for(let i=0;i<count;i++){
+        const img = document.createElement("img");
+        img.src = imgURL;
+        img.style.position="fixed";
+        img.style.left=Math.random()*100+"vw";
+        img.style.top="-15vh";
+        img.style.width=(30+Math.random()*60)+"px";
+        img.style.zIndex=99999;
+        img.style.animation="fall "+(3+Math.random()*3)+"s linear forwards";
+        document.body.appendChild(img);
+        setTimeout(()=>img.remove(),7000);
       }
     });
-
-    // small falling animation keyframes (injected dynamically so we don't edit head styles)
-    const style = document.createElement('style');
-    style.textContent = `@keyframes fall { 0%{ transform: translateY(-10vh) rotate(0deg); opacity:1 } 100% { transform: translateY(110vh) rotate(720deg); opacity:0 } }`;
-    document.head.appendChild(style);
-
-    /* Attempt one-time autoplay (muted) — browsers typically allow muted autoplay */
-    (async function tryAutoplay() {
-      try {
-        await bgVideo.play();
-      } catch (e) {
-        // autoplay blocked — video will still play after user interacts
-        console.warn('Autoplay blocked by browser:', e);
-      }
-    })();
   </script>
+
 </body>
 </html>
